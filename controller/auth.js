@@ -1,5 +1,5 @@
 const userModel = require("../model/user");
-const userSchemaZod = require("../utils/validation")
+const {userSchemaZod} = require("../utils/validation")
 const bcrypt = require("bcrypt");
 
 async function handleUserSignUp(req, res) {

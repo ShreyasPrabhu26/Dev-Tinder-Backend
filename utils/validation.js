@@ -33,4 +33,19 @@ const userSchemaZod = z.object({
     skills: z.array(z.string()).optional(),
 });
 
-module.exports = userSchemaZod;
+const userEditSchemaZod = userSchemaZod.pick({
+    firstName: true,
+    lastName: true,
+    emailId: true,
+    age: true,
+    gender: true,
+    photoUrl: true,
+    about: true,
+    skills: true,
+}).partial().strict();
+
+
+module.exports = {
+    userSchemaZod,
+    userEditSchemaZod
+}

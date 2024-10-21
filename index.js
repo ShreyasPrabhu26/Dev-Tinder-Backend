@@ -1,7 +1,10 @@
 const express = require("express");
 const connectToDatabase = require("./config/connection");
-const authRouter = require("./routes/auth");
 const cookieParser = require("cookie-parser");
+
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+
 const app = express();
 
 //Environment Configuration
@@ -14,6 +17,7 @@ app.use(cookieParser());
 
 //Routes
 app.use("/auth", authRouter);
+app.use("/profile", profileRouter)
 
 connectToDatabase(CONNECTION_STRING)
     .then(() => {
