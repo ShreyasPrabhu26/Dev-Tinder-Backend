@@ -1,10 +1,17 @@
 const express = require("express");
 const connectToDatabase = require("./config/connection");
+const userRouter = require("./routes/user");
 const app = express();
 
 //Environment Configuration
 const CONNECTION_STRING = process.env.CONNECTION_STRING;
 const PORT = process.env.PORT || 3000;
+
+//Middlewares
+app.use(express.json())
+
+//Routes
+app.use("/user", userRouter);
 
 connectToDatabase(CONNECTION_STRING)
     .then(() => {
@@ -14,5 +21,5 @@ connectToDatabase(CONNECTION_STRING)
         });
     })
     .catch((err) => {
-        console.log("Connection to Database Failed!", err)
+        console.log(err)
     })
