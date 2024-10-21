@@ -18,6 +18,28 @@ async function handleUserSignUp(req, res) {
     }
 }
 
+
+async function handleUserLogin(req, res) {
+    try {
+        const { emailId, password } = req.body;
+        if (!emailId || !password) {
+            throw new Error("Provide Proper Credentials")
+        }
+
+        const user = await userModel.findOne({ emailId, password });
+        if (!user) {
+            throw new Error("Invalid credentials");
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({
+            message: `Something went wrong! ${error}`
+        })
+    }
+}
+
+
 module.exports = {
-    handleUserSignUp
+    handleUserSignUp,
+    handleUserLogin
 }
