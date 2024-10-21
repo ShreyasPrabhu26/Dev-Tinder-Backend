@@ -1,6 +1,7 @@
 const express = require("express");
 const connectToDatabase = require("./config/connection");
 const authRouter = require("./routes/auth");
+const cookieParser = require("cookie-parser");
 const app = express();
 
 //Environment Configuration
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 //Middlewares
 app.use(express.json())
+app.use(cookieParser());
 
 //Routes
 app.use("/auth", authRouter);

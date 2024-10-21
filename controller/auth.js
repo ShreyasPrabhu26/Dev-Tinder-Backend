@@ -7,6 +7,13 @@ async function handleUserSignUp(req, res) {
         if (validatatedData) {
             const user = new userModel(validatatedData);
             const savedUser = await user.save();
+
+            const token = await savedUser.getJWT();
+            res.cookie("token", token, {
+                // Expires in 8hr
+                expires: new Date(Date.now() + 8 * 3600000),
+            });
+
             res.status(200).json(
                 savedUser
             )
@@ -30,6 +37,13 @@ async function handleUserLogin(req, res) {
         if (!user) {
             throw new Error("Invalid credentials");
         }
+
+        const token = user.getJWT();
+        res.cookie("token", token, {
+            // Expires in 8hr
+            expires: new Date(Date.now() + 8 * 3600000),
+        });
+
         res.status(200).json(user);
     } catch (error) {
         res.status(400).json({

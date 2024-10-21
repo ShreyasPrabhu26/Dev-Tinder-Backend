@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const { defaultUserProfilePhoto } = require("../utils/constants");
 
 const userSchema = new mongoose.Schema(
@@ -50,6 +51,16 @@ const userSchema = new mongoose.Schema(
     }
 );
 
+userSchema.methods.getJWT = function () {
+    const user = this;
+
+    const token = jwt.sign({ _id: user._id },
+        process.env.JWT_SECRET, {
+        expiresIn: "2d",
+    });
+
+    return token;
+};
 
 const userModel = mongoose.model("User", userSchema);
 
