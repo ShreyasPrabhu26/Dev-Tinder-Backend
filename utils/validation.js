@@ -44,8 +44,16 @@ const userEditSchemaZod = userSchemaZod.pick({
     skills: true,
 }).partial().strict();
 
+const allowedRequestStatus = z.enum(
+    ["accepted", "intrested", "ignore", "rejected"],
+    {
+        required_error: "Status is required",
+        invalid_type_error: "Invalid Status",
+    }
+);
 
 module.exports = {
     userSchemaZod,
-    userEditSchemaZod
+    userEditSchemaZod,
+    allowedRequestStatus
 }
