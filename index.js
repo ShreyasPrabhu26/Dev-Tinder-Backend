@@ -1,6 +1,6 @@
 const express = require("express");
 const connectToDatabase = require("./config/connection");
-const userRouter = require("./routes/user");
+const authRouter = require("./routes/auth");
 const app = express();
 
 //Environment Configuration
@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json())
 
 //Routes
-app.use("/user", userRouter);
+app.use("/auth", authRouter);
 
 connectToDatabase(CONNECTION_STRING)
     .then(() => {
