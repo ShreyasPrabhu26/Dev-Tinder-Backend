@@ -45,7 +45,15 @@ const userEditSchemaZod = userSchemaZod.pick({
 }).partial().strict();
 
 const allowedRequestStatus = z.enum(
-    ["accepted", "intrested", "ignore", "rejected"],
+    ["intrested", "ignore"],
+    {
+        required_error: "Status is required",
+        invalid_type_error: "Invalid Status",
+    }
+);
+
+const allowedRequestReviewStatus = z.enum(
+    ["accepted", "rejected"],
     {
         required_error: "Status is required",
         invalid_type_error: "Invalid Status",
@@ -55,5 +63,6 @@ const allowedRequestStatus = z.enum(
 module.exports = {
     userSchemaZod,
     userEditSchemaZod,
-    allowedRequestStatus
+    allowedRequestStatus,
+    allowedRequestReviewStatus
 }
