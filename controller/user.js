@@ -1,5 +1,6 @@
 const ConnectionRequestModel = require("../model/connectionRequest");
 const userModel = require("../model/user");
+const { FEED_LIMIT } = require("../utils/constants");
 
 async function handleGetRecivedRequest(req, res) {
     try {
@@ -57,6 +58,11 @@ async function handleGetFeed(req, res) {
     try {
         const loggedInUser = req.user;
 
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 10;
+        limit = limit > FEED_LIMIT ? FEED_LIMIT : limit;
+        const skip = (page - 1) * limit;
+
         const connectionRequests = await ConnectionRequestModel.find({
             $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
         }).select("fromUserId  toUserId");
@@ -74,6 +80,8 @@ async function handleGetFeed(req, res) {
             ],
         })
             .select(["firstName", "lastName", "photoUrl", "gender", "about", "skills"])
+            .skip(skip)
+            .limit(limit);
 
         response.status(200).json({ data: users });
     } catch (err) {
