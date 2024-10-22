@@ -1,4 +1,5 @@
 const ConnectionRequestModel = require("../model/connectionRequest");
+const userModel = require("../model/user");
 
 async function handleGetRecivedRequest(req, res) {
     try {
@@ -52,7 +53,36 @@ async function handleGetConnections(req, res) {
     }
 }
 
+async function handleGetFeed(req, res) {
+    try {
+        const loggedInUser = req.user;
+
+        const connectionRequests = await ConnectionRequestModel.find({
+            $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+        }).select("fromUserId  toUserId");
+
+        const hideUsersFromFeed = new Set();
+        connectionRequests.forEach((req) => {
+            hideUsersFromFeed.add(req.fromUserId.toString());
+            hideUsersFromFeed.add(req.toUserId.toString());
+        });
+
+        const users = await userModel.find({
+            $and: [
+                { _id: { $nin: Array.from(hideUsersFromFeed) } },
+                { _id: { $ne: loggedInUser._id } },
+            ],
+        })
+            .select(["firstName", "lastName", "photoUrl", "gender", "about", "skills"])
+
+        response.status(200).json({ data: users });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}
+
 module.exports = {
     handleGetRecivedRequest,
-    handleGetConnections
+    handleGetConnections,
+    handleGetFeed
 }
