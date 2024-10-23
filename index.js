@@ -1,11 +1,13 @@
 const express = require("express");
 const connectToDatabase = require("./config/connection");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
+const { WEB_APP_BASE_URL } = require("./utils/constants");
 
 const app = express();
 
@@ -14,7 +16,14 @@ const CONNECTION_STRING = process.env.CONNECTION_STRING;
 const PORT = process.env.PORT || 3000;
 
 //Middlewares
-app.use(express.json())
+app.use(express.json());
+app.use(
+    cors({
+        origin: WEB_APP_BASE_URL,
+        credentials: true,
+    })
+);
+
 app.use(cookieParser());
 
 //Routes
