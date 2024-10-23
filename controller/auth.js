@@ -1,5 +1,5 @@
 const userModel = require("../model/user");
-const {userSchemaZod} = require("../utils/validation")
+const { userSchemaZod } = require("../utils/validation")
 const bcrypt = require("bcrypt");
 
 async function handleUserSignUp(req, res) {
@@ -63,8 +63,16 @@ async function handleUserLogin(req, res) {
     }
 }
 
+async function handleUserLogout(req, res) {
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+    });
+    res.status(200)
+        .send("Logout Successful!!");
+}
 
 module.exports = {
     handleUserSignUp,
-    handleUserLogin
+    handleUserLogin,
+    handleUserLogout
 }
