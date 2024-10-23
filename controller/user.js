@@ -83,7 +83,7 @@ async function handleGetFeed(req, res) {
             .skip(skip)
             .limit(limit);
 
-        response.status(200).json({ data: users });
+        res.status(200).json(users);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
