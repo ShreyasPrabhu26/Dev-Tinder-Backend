@@ -1,8 +1,16 @@
-const mongoose = require("mongoose");
+const { MongoClient, ServerApiVersion } = require("mongodb");
 
-async function connectToDatabase(connectionString) {
+async function connectToDatabase(CONNECTION_STRING) {
     try {
-        await mongoose.connect(connectionString);
+        const client = new MongoClient(CONNECTION_STRING, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        }
+        );
+        await client.connect();
     } catch (err) {
         throw new Error("Database Connection Failed!", err)
     }
