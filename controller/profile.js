@@ -1,3 +1,4 @@
+const { userEditSchemaZod } = require("../utils/validation");
 
 function handleViewProfile(req, res) {
     try {
@@ -10,6 +11,13 @@ function handleViewProfile(req, res) {
 
 async function handleEditProfile(req, res) {
     try {
+        const userValidation = userEditSchemaZod.safeParse(req.body);
+        if (!userValidation.success) {
+            return res.status(400).json({
+                message: "Data validation failed",
+            });
+        }
+        
         const loggedInUser = req.user;
 
         //[PATCH] Replace existing data with saved Data
@@ -23,7 +31,7 @@ async function handleEditProfile(req, res) {
         });
 
     } catch (error) {
-        res.status(400).send("Opps Something went wrong! : : " + error.message);
+        res.status(400).send(error.message);
     }
 };
 
