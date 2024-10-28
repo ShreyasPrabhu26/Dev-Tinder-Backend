@@ -6,10 +6,6 @@ async function handleUserSignUp(req, res) {
     try {
         const validatatedData = userSchemaZod.parse(req.body);
         if (validatatedData) {
-            // Encrypt the password
-            const passwordHash = await bcrypt.hash(validatatedData.password, 10);
-            validatatedData.password = passwordHash;
-
             const user = new userModel(validatatedData);
             const savedUser = await user.save();
 
