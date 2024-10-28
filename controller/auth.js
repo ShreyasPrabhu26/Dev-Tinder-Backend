@@ -24,9 +24,15 @@ async function handleUserSignUp(req, res) {
             )
         }
     } catch (error) {
-        res.status(400).json({
-            message: `Something went wrong! ${error}`
-        })
+        if (error?.code === 11000) {
+            return res.status(400).json({
+                message: `Email is Already Taken`
+            })
+        } else {
+            return res.status(400).json({
+                message: `Something went wrong! ${error}`
+            })
+        }
     }
 }
 
