@@ -9,7 +9,7 @@ async function handleGetRecivedRequest(req, res) {
         const recivedRequests = await ConnectionRequestModel.find({
             toUserId: userId,
             status: "intrested"
-        }).populate("fromUserId", ["firstName", "lastName", "photoUrl", "gender", "about", "skills"])
+        }).populate("fromUserId", ["firstName", "lastName", "photoUrl", "gender", "age", "about", "skills"])
 
         if (!recivedRequests) {
             return res
@@ -80,7 +80,7 @@ async function handleGetFeed(req, res) {
                 { _id: { $ne: loggedInUser._id } },
             ],
         })
-            .select(["firstName", "lastName", "photoUrl", "gender", "about", "skills"])
+            .select(["firstName", "lastName", "photoUrl", "gender", "about", "age", "skills"])
             .skip(skip)
             .limit(limit);
 
