@@ -33,26 +33,23 @@ async function handleGetConnections(req, res) {
                 { fromUserId: loggedInUser._id, status: "accepted" },
             ],
         })
-            .populate("fromUserId", ["firstName", "lastName", "photoUrl", "age", "gender", "about", "skills"])
-            .populate("toUserId", ["firstName", "lastName", "photoUrl", "age", "gender", "about", "skills"]);
+            .populate("fromUserId", "firstName lastName photoUrl age gender about skills")
+            .populate("toUserId", "firstName lastName photoUrl age gender about skills");
 
-        if (!connectionRequests || connectionRequests.length === 0) {
-            return res.status(404).send("No connections found.");
-        }
 
         const data = connectionRequests.map((row) => {
-            // Check if the logged-in user is the sender or receiver
-            return row.fromUserId._id.toString() === loggedInUser._id.toString()
-                ? row.toUserId // Return the populated toUserId
-                : row.fromUserId; // Return the populated fromUserId
+            if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+                return row.toUserId;
+            }
+            return row.fromUserId;
         });
 
-        res.status(200).json({ data });
-
-    } catch (error) {
-        res.status(400).send("Oops! Something went wrong: " + error.message);
+        res.json({ data });
+    } catch (err) {
+        res.status(400).send({ message: err.message });
     }
 }
+
 
 
 async function handleGetFeed(req, res) {
